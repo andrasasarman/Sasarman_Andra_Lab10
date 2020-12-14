@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Sasarman_Andra_Lab10.Models;
+using Sasarman_Andra_Lab10.Data;
+
+
+
 
 namespace Sasarman_Andra_Lab10
 {
@@ -31,5 +35,22 @@ namespace Sasarman_Andra_Lab10
             await App.Database.DeleteShopListAsync(slist);
             await Navigation.PopAsync();
         }
+        async void OnChooseButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ProductPage((ShopList)
+           this.BindingContext)
+            {
+                BindingContext = new Product()
+            });
+
+        }
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            var shopl = (ShopList)BindingContext;
+
+            listView.ItemsSource = await App.Database.GetListProductsAsync(shopl.ID);
+        }
+
     }
 }
